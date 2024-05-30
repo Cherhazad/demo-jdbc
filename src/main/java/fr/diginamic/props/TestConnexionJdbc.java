@@ -21,19 +21,19 @@ public class TestConnexionJdbc {
 		String pwd = config.getString("database.password");
 		System.out.println(url);
 
-//		Connection maConnexion = null;
-//		Statement stat = null;
-//		ResultSet resultat = null;
+		Connection maConnexion = null;
+		Statement stat = null;
+		ResultSet resultat = null;
 
 		try {
 			// DriverManager.registerDriver(new org.mariadb.jdbc.Driver()); //si Mariadb
 			DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver()); // on peut aussi
 			// écrire car font la même chose : Class.forName("com.mysql.cj.jdbc.Driver");
-			Connection maConnexion = DriverManager.getConnection(url, user, pwd);
+			maConnexion = DriverManager.getConnection(url, user, pwd);
 			System.out.println(maConnexion);
 
 			// Exécuter un insert
-			Statement stat = maConnexion.createStatement();
+			stat = maConnexion.createStatement();
 			int nbLignesAjoutees = stat.executeUpdate("insert into fournisseur (id, nom) values (4, 'Leroy Merlin')");
 			int nbLignesModif = stat.executeUpdate("update fournisseur set nom = 'Leroy&Merlin' where id = 4");
 			int nbLignesDelete = stat.executeUpdate("delete from fournisseur where id=7");
@@ -44,7 +44,7 @@ public class TestConnexionJdbc {
 
 			ArrayList<Fournisseur> listeFournisseurs = new ArrayList<>();
 
-			ResultSet resultat = stat.executeQuery("SELECT id, nom from fournisseur");
+			resultat = stat.executeQuery("SELECT id, nom from fournisseur");
 
 			while (resultat.next()) {
 

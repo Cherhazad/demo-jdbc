@@ -20,13 +20,17 @@ public class TestSelect {
 		String pwd = config.getString("database.password");
 		System.out.println(url);
 		
+		Connection maConnexion = null;
+		Statement stat = null;
+		ResultSet resultat = null;
+		
 		try {
 			DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-			Connection maConnexion = DriverManager.getConnection(url, user, pwd);
+			maConnexion = DriverManager.getConnection(url, user, pwd);
 			
 			ArrayList<Fournisseur> listeFournisseurs = new ArrayList<>();
-			Statement stat = maConnexion.createStatement();
-			ResultSet resultat = stat.executeQuery("SELECT ID, NOM from FOURNISSEUR");
+			stat = maConnexion.createStatement();
+			resultat = stat.executeQuery("SELECT ID, NOM from FOURNISSEUR");
 
 			while (resultat.next()) {
 				Fournisseur f = new Fournisseur(resultat.getInt("id"), resultat.getString("nom"));
@@ -40,6 +44,17 @@ public class TestSelect {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			
+			try {
+				maConnexion.close();
+				stat.close();
+				resultat.close();
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		
