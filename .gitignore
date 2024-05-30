@@ -1,0 +1,6 @@
+target/
+
+#facultatif : fichiers de conf de l'IDE Spring Tool Suite
+.settings/
+.classpath
+.project
