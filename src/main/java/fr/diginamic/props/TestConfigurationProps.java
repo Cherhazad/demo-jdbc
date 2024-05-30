@@ -1,5 +1,6 @@
 package fr.diginamic.props;
 
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 public class TestConfigurationProps {
@@ -8,6 +9,13 @@ public class TestConfigurationProps {
 		ResourceBundle config = ResourceBundle.getBundle("config");
 		String url = config.getString("database.url");
 		System.out.println(url);
+
+		Iterator<String> iterateur = config.getKeys().asIterator();
+
+		while (iterateur.hasNext()) {
+			String key = iterateur.next();
+			System.out.println(key);
+		}
 	}
 
 }
