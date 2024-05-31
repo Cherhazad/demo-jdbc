@@ -1,5 +1,7 @@
 package fr.diginamic.jdbc.entites;
 
+import java.util.Objects;
+
 public class Fournisseur {
 
 	private int id;
@@ -48,6 +50,23 @@ public class Fournisseur {
 	@Override
 	public String toString() {
 		return "Fournisseur [id=" + id + ", nom=" + nom + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, nom);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Fournisseur other = (Fournisseur) obj;
+		return id == other.id && Objects.equals(nom, other.nom);
 	}
 
 	
