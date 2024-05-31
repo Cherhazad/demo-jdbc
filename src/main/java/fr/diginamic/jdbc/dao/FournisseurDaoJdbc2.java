@@ -14,25 +14,34 @@ import fr.diginamic.jdbc.entites.Fournisseur;
 
 public class FournisseurDaoJdbc2 implements FournisseurDao {
 
+	private String url;
+	private String user;
+	private String pwd;
 	
-	
-	@Override
-	public List<Fournisseur> extraire() {
+	public FournisseurDaoJdbc2() {
 		ResourceBundle config = ResourceBundle.getBundle("config");
 		String url = config.getString("database.url");
 		String user = config.getString("database.user");
 		String pwd = config.getString("database.password");
-		System.out.println(url);
+		System.out.println(url);	
+		
+	}
+	
+	@Override
+	public List<Fournisseur> extraire() {
+		
 		
 		Connection maConnexion = null;
 		PreparedStatement stat = null;
 		ResultSet resultat = null;
 		
+		ArrayList<Fournisseur> listeFournisseurs = null;
+		
 		try {
 			DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
 			maConnexion = DriverManager.getConnection(url, user, pwd);
 			
-			ArrayList<Fournisseur> listeFournisseurs = new ArrayList<>();
+			listeFournisseurs = new ArrayList<>();
 			stat = maConnexion.prepareStatement("SELECT ID, NOM from FOURNISSEUR");
 			resultat = stat.executeQuery();
 
@@ -51,27 +60,20 @@ public class FournisseurDaoJdbc2 implements FournisseurDao {
 		} finally {
 			
 			try {
-				maConnexion.close();
-				stat.close();
 				resultat.close();
-				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			closeResources(maConnexion, stat);
 		}
-		return null;
+		return listeFournisseurs;
 		
 	}
 
 	@Override
 	public void insert(Fournisseur fournisseur) {
 
-		ResourceBundle config = ResourceBundle.getBundle("config");
-		String url = config.getString("database.url");
-		String user = config.getString("database.user");
-		String pwd = config.getString("database.password");
-		System.out.println(url);
 
 		Connection maConnexion = null;
 		PreparedStatement stat = null;
@@ -92,26 +94,14 @@ public class FournisseurDaoJdbc2 implements FournisseurDao {
 			e.printStackTrace();
 		} finally {
 
-			try {
-				maConnexion.close();
-				stat.close();
-
-			} catch (SQLException e) {
-				
-				e.printStackTrace();
-			}
+			closeResources(maConnexion, stat);
 		}
 		
 	}
 
 	@Override
 	public int update(String ancienNom, String nouveauNom) {
-		ResourceBundle config = ResourceBundle.getBundle("config");
-		String url = config.getString("database.url");
-		String user = config.getString("database.user");
-		String pwd = config.getString("database.password");
-		System.out.println(url);
-
+		
 		Connection maConnexion = null;
 		PreparedStatement stat = null;
 
@@ -132,13 +122,7 @@ public class FournisseurDaoJdbc2 implements FournisseurDao {
 			e.printStackTrace();
 		} finally {
 
-			try {
-				maConnexion.close();
-				stat.close();
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			closeResources(maConnexion, stat);
 		}
 
 		return 0;
@@ -146,12 +130,7 @@ public class FournisseurDaoJdbc2 implements FournisseurDao {
 
 	@Override
 	public boolean delete(Fournisseur fournisseur) {
-		ResourceBundle config = ResourceBundle.getBundle("config");
-		String url = config.getString("database.url");
-		String user = config.getString("database.user");
-		String pwd = config.getString("database.password");
-		System.out.println(url);
-
+		
 		Connection maConnexion = null;
 		PreparedStatement stat = null;
 
@@ -171,16 +150,20 @@ public class FournisseurDaoJdbc2 implements FournisseurDao {
 
 			e.printStackTrace();
 		} finally {
-			try {
-				maConnexion.close();
-				stat.close();
-
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			closeResources(maConnexion, stat);
 		}
 
 		return false;
+	}
+
+	private void closeResources(Connection maConnexion, PreparedStatement stat) {
+		try {
+			maConnexion.close();
+			stat.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	
